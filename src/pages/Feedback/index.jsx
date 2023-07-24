@@ -9,7 +9,9 @@ const url=" http://localhost:3001/feedback"
 
 function Feedback() {
     const [name, setName] = useState('');
-    const [review, setReview] = useState('');
+    const [adjective, setAdjective] = useState('');
+    const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
     const [price, setPrice] = useState('');
     const [postImage, setPostImage]=useState({myfile:""})
     const navigate = useNavigate();
@@ -27,11 +29,14 @@ function Feedback() {
         e.preventDefault();
         const postData = {
             name,
-            review,
+            adjective,
+            description,
             price,
-            myfile: postImage.myfile,
+            category,
+            imageUrl:postImage.myfile,
           };
         createPost(postData);
+        console.log(postData);
         console.log("Uploaded");
         alert("Submitted");
         navigate('/');
@@ -81,14 +86,27 @@ function Feedback() {
             </div>
           </div>
           <div>
-            <label htmlFor="review" className="block text-sm font-medium text-gray-700">Product Description</label>
+            <label htmlFor="adjective" className="block text-sm font-medium text-gray-700">Product Adjective</label>
             <div className="mt-1">
               <textarea
-                id="review"
-                name="review"
+                id="adjective"
+                name="adjective"
+                rows="1"
+                value={adjective}
+                onChange={(e) => setAdjective(e.target.value)}
+                className="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              ></textarea>
+            </div>
+          </div>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Product Description</label>
+            <div className="mt-1">
+              <textarea
+                id="description"
+                name="description"
                 rows="3"
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
               ></textarea>
             </div>
@@ -107,6 +125,48 @@ function Feedback() {
                 onChange={(e) => setPrice(e.target.value)}
                 className="block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
               />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">Product Category</label>
+            <div className="ml-0">
+              <input
+                type="radio"
+                name="category"
+                id="Computers"
+                value="Computers"
+                onChange={(e) => setCategory(e.target.value)}
+                className="mr-2 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              />
+              <label htmlFor="Computers">Computers</label><br></br>
+              <input
+                type="radio"
+                name="category"
+                id="Phones"
+                value="Phones"
+                onChange={(e) => setCategory(e.target.value)}
+                className="mr-2 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              />
+              <label htmlFor="Phones">Phones</label><br></br>
+              <input
+                type="radio"
+                name="category"
+                id="HomeAppliances"
+                value="HomeAppliances"
+                onChange={(e) => setCategory(e.target.value)}
+                className="mr-2 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              />
+              <label htmlFor="HomeAppliances">Home Appliances</label><br></br>
+              <input
+                type="radio"
+                name="category"
+                id="Peripherals"
+                value="Peripherals"
+                onChange={(e) => setCategory(e.target.value)}
+                className="mr-2 shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              />
+              <label htmlFor="Peripherals">Peripherals</label><br></br>
             </div>
           </div>
 

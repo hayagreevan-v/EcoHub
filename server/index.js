@@ -1,6 +1,8 @@
 //import model
 //import Post from './model/post.model.js';
 const Post = require("./models/post.model.js")
+const Product = require("./models/productModel.js")
+const Category= require("./models/categoryModel.js")
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -23,12 +25,7 @@ var corOptions ={
     origin:"https://localhost:3000"
 }
 
-const connect = require("./db/conn.js")
 app.use(express.json());
-
-
-const env = require('dotenv').config({path: '../.env'});
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Order = require('./models/orderModel.js');
 app.post('/create-payment-intent',async(req,res) => {
@@ -72,7 +69,9 @@ app.post('/create-payment-intent',async(req,res) => {
 app.use(bodyParser.json({limit: '100mb'}));
 app.use(bodyParser.urlencoded({limit: '100mb',extended: true}));
 db.on('error',console.error.bind(console,"MongDB Connection error"))
-
+db.once('open',function(){
+    console.log("Database Connection established...");
+})
 app.get("/",(req,res)=>{
     try{
     res.json({message:"Welcome to Food Delivery System"});
@@ -95,15 +94,23 @@ app.get("/",(req,res)=>{
 /**Post: https://localhost:3001/feedback */
 app.post("/feedback",async(req,res)=>{
     //const body=req.body;
-    const { name, review,price, myfile } = req.body;
+    const { name, adjective,description,price, category, imageUrl } = req.body;
     //console.log(req.body);
     try{
         //const newImage=await Post.create(body)
         //newImage.save().then().catch(e => console.log(e));
         //const newPost = await Post.create({ name, review, myfile });
-        const newPost = await Post.create({ name, review,price, myfile });
-        newPost.save().then().catch(e => console.log(e));
-        res.status(201).json({msg:"New image uploaded...!"});
+        const productCategory = await Category.findOne({name:category});
+        //console.log(productCategory);
+        const newProduct = await Product.create({ 
+            name, 
+            adjective,
+            desciption:description,
+            price, 
+            category:{name:productCategory.name,_id: productCategory._id},
+            imageUrl });
+        newProduct.save().then().catch(e => console.log(e));
+        res.status(201).json({msg:"New Product uploaded...!"});
     }
     catch(error){
         console.log(error);
